@@ -35,7 +35,7 @@ class ServerStatus:
         })
 
     def btree(self):
-        b = self.status["indexCounters"]["btree"]
+        b = self.status["indexCounters"]
         self.callGmetric({
             "btree_accesses" : (b["accesses"], "count"),
             "btree_hits" : (b["hits"], "count"),
