@@ -84,8 +84,11 @@ class ServerStatus:
         })
 
     def lock(self):
+        lock_time = self.status["globalLock"]["lockTime"]
+        lock_total_time = self.status["globalLock"]["totalTime"]
+        lock_ratio = lock_time / float(lock_total_time) * 100
         self.callGmetric({
-            "lock_ratio" : (self.status["globalLock"]["ratio"], "ratio")
+            "lock_ratio" : (lock_ratio, "ratio")
         })
     
 if __name__ == "__main__":
