@@ -92,4 +92,8 @@ class ServerStatus:
         })
     
 if __name__ == "__main__":
+    try:
+        if sys.argv[1] == "debug":
+            GMETRIC = "/bin/echo "+GMETRIC
+    except: pass
     ServerStatus()
