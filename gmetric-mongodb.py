@@ -24,7 +24,7 @@ class ServerStatus:
     def __init__(self):
         self.status = self.getServerStatus()
         # call individual metrics
-        for f in ["conns", "btree", "mem", "backgroundFlushing", "repl", "ops", "lock"]:
+        for f in ["conns", "mem", "backgroundFlushing", "ops", "lock"]:
             getattr(self, f)()
 
         if (hasPyMongo):
@@ -159,8 +159,12 @@ class ServerStatus:
         })
 
     def lock(self):
+        global_lock = self.status["locks"]["Global"]
+        lock_wait_time = global_lock["timeAcquiringMicros"]["r"]["$numberLong"]
+        lock_total_time = self.status["globalLock"]["totalTime"]["$numberLong"]
+        lock_wait_ratio = float(lock_wait_time) / float(lock_total_time) * 100
         self.callGmetric({
-            "lock_ratio" : (self.status["globalLock"]["ratio"], "ratio"),
+            "lock_wait_ratio" : (lock_wait_ratio, "ratio"),
             "lock_queue_readers" : (self.status["globalLock"]["currentQueue"]["readers"], "queue size"),
             "lock_queue_writers" : (self.status["globalLock"]["currentQueue"]["writers"], "queue size"),
         })
